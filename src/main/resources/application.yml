@@ -1,0 +1,22 @@
+server:
+  port: 5000
+
+twitter:
+  query:
+    handle: SDOTBridges
+    url: https://api.twitter.com/2/tweets/search/recent?query=
+
+sdot:
+  url: "https://web6.seattle.gov/Travelers/api/Map/GetBridgeData"
+
+aws:
+  secrets:
+    bucket: brdges-data-service
+
+cache:
+  tweets:
+    refresh:
+      intervalMillis: 60000
+  bridges:
+    refresh:
+      intervalMillis: 60000
