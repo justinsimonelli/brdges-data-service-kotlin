@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect
 
 private const val WHITESPACE_REPLACEMENT = "_"
 private val WHITESPACE_PATTERN = "\\s+".toRegex()
+private const val CLOSED = "closed"
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 data class BridgeData(
@@ -12,7 +13,10 @@ data class BridgeData(
     @JsonAlias("DisplayName") val name: String,
     @JsonAlias("Latitude") val lat: Double,
     @JsonAlias("Longitude") val lng: Double,
-    @JsonAlias("Status") val status: String
+    @JsonAlias("Status") val status: String,
+    var closedToTrafficAt: String? = null,
+    var lastClosedToTrafficAt: String? = null,
 ) {
     fun cleanName() = this.name.replace(WHITESPACE_PATTERN, WHITESPACE_REPLACEMENT).toLowerCase()
+    fun isOpenToTraffic() = CLOSED.equals(this.status, ignoreCase = true)
 }

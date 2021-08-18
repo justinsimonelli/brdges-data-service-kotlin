@@ -52,7 +52,7 @@ class AwsSecretsRetriever(
 
             cachedSecretsJson = objectMapper.readTree(getAllSecrets())
         } catch (e: Exception) {
-            val exceptionMessage = when(e) {
+            val exceptionMessage = when (e) {
                 is DecryptionFailureException -> DECRYPTION_FAILURE
                 is InternalServiceErrorException -> INTERNAL_SERVICE_ERROR
                 is InvalidParameterException -> INVALID_PARAMETERS

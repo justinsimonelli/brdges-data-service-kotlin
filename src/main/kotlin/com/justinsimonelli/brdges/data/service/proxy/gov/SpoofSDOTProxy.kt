@@ -1,30 +1,23 @@
 package com.justinsimonelli.brdges.data.service.proxy.gov
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import com.justinsimonelli.brdges.data.service.models.gov.BridgeData
-import io.ktor.client.HttpClient
-import io.ktor.client.request.get
-import org.springframework.beans.factory.annotation.Value
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 
 @Named
-class SDOTProxy
+class SpoofSDOTProxy
 @Inject
 constructor(
-    private val httpClient: HttpClient,
     jacksonObjectMapper: ObjectMapper,
-    dateFormatter: DateTimeFormatter,
-    @Value("\${sdot.url}") private val sdotUrl: String
-): BaseProxy(jacksonObjectMapper, dateFormatter) {
+    dateFormatter: DateTimeFormatter
+) : BaseProxy(jacksonObjectMapper, dateFormatter) {
 
     private val bridgeCache = mutableMapOf<String, CacheEntry>()
 
-    suspend fun pullBridgeData(): List<BridgeData> {
-        val bridgeData = deserializeDataToList<BridgeData>(httpClient.get(sdotUrl))
-
+    fun pullBridgeData(spoofName: String?): List<BridgeData> {
+        val bridgeData = deserializeDataToList<BridgeData>(spoofResponse(spoofName = spoofName))
         bridgeData.forEach {
             updateBridgeCacheData(bridgeCache, it)
 
@@ -33,5 +26,9 @@ constructor(
         }
 
         return bridgeData
+    }
+
+    private fun spoofResponse(spoofName: String?): String = spoofName.let {
+        SDOTProxy::class.java.getResource("/spoof/${it}.txt").readText()
     }
 }

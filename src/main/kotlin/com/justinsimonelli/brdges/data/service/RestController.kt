@@ -1,10 +1,11 @@
 package com.justinsimonelli.brdges.data.service
 
 import com.justinsimonelli.brdges.data.service.cache.CacheManager
-import com.justinsimonelli.brdges.data.service.models.BridgeStatus
+import com.justinsimonelli.brdges.data.service.models.BridgeStatusResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 class RestController(
@@ -15,11 +16,10 @@ class RestController(
     fun health(): ResponseEntity<String> =
         ResponseEntity.ok("Healthy")
 
-    @GetMapping("/bridges")
-    fun availableBridges(): ResponseEntity<Map<String, BridgeStatus>> =
-        ResponseEntity.ok(cacheManager.getBridgeStatuses())
-
     @GetMapping("/statuses")
-    fun getBridgeStatuses(): ResponseEntity<Map<String, BridgeStatus>> =
-        ResponseEntity.ok(cacheManager.getBridgeStatuses())
+    fun getBridgeStatuses(
+        @RequestParam force: Boolean?,
+        @RequestParam spoofName: String?
+    ): ResponseEntity<BridgeStatusResponse> =
+        ResponseEntity.ok(cacheManager.bridgeStatuses(force, spoofName))
 }

@@ -4,7 +4,8 @@ data class BridgeStatus(
     val id: String,
     val name: String,
     var status: String?,
-    var closedAt: String? = null,
+    var closedToTrafficAt: String? = null,
+    var lastClosedToTrafficAt: String? = null,
     val lat: Double,
     val lng: Double
 )

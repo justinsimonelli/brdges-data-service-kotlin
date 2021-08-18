@@ -4,7 +4,7 @@ import com.amazonaws.regions.Regions
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder
 import com.fasterxml.jackson.databind.DeserializationFeature
-import com.justinsimonelli.brdges.data.service.mapper.SDOT_DATE_FORMAT
+import com.justinsimonelli.brdges.data.service.Constants
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.features.json.JacksonSerializer
@@ -31,7 +31,7 @@ class ObjectProvider {
     }
 
     @Bean
-    fun sdotDateFormatter() = DateTimeFormatter.ofPattern(SDOT_DATE_FORMAT)
+    fun sdotDateFormatter() = DateTimeFormatter.ofPattern(Constants.SDOT_DATE_FORMAT)
 
 
     @Bean
