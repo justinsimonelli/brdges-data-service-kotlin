@@ -19,10 +19,10 @@ constructor(private val httpClient: HttpClient,
             private val jacksonObjectMapper: ObjectMapper,
             @Value("\${sdot.url}") private val sdotUrl: String) {
 
-    suspend fun pullBridgeData(): List<BridgeData>? {
+    suspend fun pullBridgeData(): List<BridgeData> {
         return httpClient
             .get<String?>(sdotUrl)
-            ?.let { jacksonObjectMapper.readValue(stripEnclosingStrings(it)) }
+            ?.let { jacksonObjectMapper.readValue(stripEnclosingStrings(it)) } ?: emptyList()
     }
 
     private fun stripEnclosingStrings(rawString: String) =

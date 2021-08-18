@@ -15,8 +15,8 @@ const val SDOT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
 @Component
 class SDOTResponseMapper(private val dateFormatter: DateTimeFormatter) {
 
-    fun map(bridgeData: List<BridgeData>?): Map<String, BridgeStatus>? =
-        bridgeData?.associate { it.cleanName() to buildBridgeStatus(it) }
+    fun map(bridgeData: List<BridgeData>): Map<String, BridgeStatus> =
+        bridgeData.associate { it.cleanName() to buildBridgeStatus(it) }
 
     private fun buildBridgeStatus(bridgeData: BridgeData): BridgeStatus {
         val isBridgeDown = bridgeData.status.toLowerCase() == CLOSED
