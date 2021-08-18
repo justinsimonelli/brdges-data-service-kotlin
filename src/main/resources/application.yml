@@ -4,6 +4,10 @@ server:
 sdot:
   url: "https://web6.seattle.gov/Travelers/api/Map/GetBridgeData"
 
+aws:
+  secrets:
+    bucket: brdges-data-service
+
 cache:
   bridges:
     refresh:

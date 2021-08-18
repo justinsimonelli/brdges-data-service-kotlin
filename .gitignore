@@ -36,3 +36,10 @@ build/
 deploy.zip
 
 .mvn/
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+deploy/

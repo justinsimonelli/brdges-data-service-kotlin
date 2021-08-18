@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
+
+build_artifacts() {
+    echo "#### Starting Build ####"
+    mvn clean package
+    rm -f deploy.zip
+    cp target/brdges-data-service-*.jar brdges-data-service-kotlin.jar
+    zip deploy.zip -r Procfile brdges-data-service-kotlin.jar
+    rm -rf brdges-data-service-kotlin.jar
+}
+
 deploy_to_aws() {
-  echo "#### Starting Build ####"
-  mvn clean package
-  cp target/brdges-data-service-*.jar brdges-data-service-kotlin.jar
-  zip deploy.zip -r Procfile brdges-data-service-kotlin.jar .ebextensions .elasticbeanstalk .platform
-  rm -rf brdges-data-service-kotlin.jar
-  eb deploy
+  echo "#### Starting Deploy to AWS - brdges-data-service ####"
+  eb deploy brdges-data-service
   rm -rf deploy.zip
 }
 
@@ -13,7 +19,9 @@ echo_commit_message() {
   echo "#### Commit the changes before trying to deploy them ####"
 }
 
-echo "Did you commit the changes??"
+build_artifacts
+
+echo "Do you want to deploy to EB?"
 select yn in "Yes" "No"; do
     case $yn in
         Yes ) deploy_to_aws; exit;;

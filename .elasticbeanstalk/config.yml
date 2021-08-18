@@ -1,12 +1,9 @@
 branch-defaults:
   master:
     environment: brdges-data-service
-environment-defaults:
-  brdges-data-service-prod:
-    branch: null
-    repository: null
 global:
   application_name: brdges-data-service-kotlin
+  branch: null
   default_ec2_keyname: simonelli-m1-2021
   default_platform: Corretto 11 running on 64bit Amazon Linux 2
   default_region: us-west-2
@@ -15,5 +12,6 @@ global:
   platform_name: null
   platform_version: null
   profile: null
+  repository: null
   sc: git
   workspace_type: Application

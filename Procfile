@@ -1,1 +1,1 @@
-web: java -jar brdges-data-service.jar
+web: java -jar brdges-data-service-kotlin.jar
