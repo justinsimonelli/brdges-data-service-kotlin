@@ -23,7 +23,7 @@ constructor(
     private val bridgeCache = mutableMapOf<String, CacheEntry>()
 
     suspend fun pullBridgeData(): List<BridgeData> {
-        val bridgeData = deserializeDataToList<BridgeData>(httpClient.get(sdotUrl))
+        val bridgeData = deserializeDataToList(httpClient.get<String>(sdotUrl))
 
         bridgeData.forEach {
             updateBridgeCacheData(bridgeCache, it)

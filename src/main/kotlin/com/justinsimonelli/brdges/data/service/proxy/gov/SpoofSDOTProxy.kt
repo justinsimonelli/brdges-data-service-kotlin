@@ -17,7 +17,8 @@ constructor(
     private val bridgeCache = mutableMapOf<String, CacheEntry>()
 
     fun pullBridgeData(spoofName: String?): List<BridgeData> {
-        val bridgeData = deserializeDataToList<BridgeData>(spoofResponse(spoofName = spoofName))
+        val bridgeData = deserializeDataToList(spoofResponse(spoofName = spoofName))
+
         bridgeData.forEach {
             updateBridgeCacheData(bridgeCache, it)
 

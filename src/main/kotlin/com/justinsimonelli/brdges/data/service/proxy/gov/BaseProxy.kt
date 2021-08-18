@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter
 open class BaseProxy(private val jacksonObjectMapper: ObjectMapper,
                      private val dateFormatter: DateTimeFormatter) {
 
-    protected fun <T> deserializeDataToList(rawString: String?): List<T> =
+    protected fun deserializeDataToList(rawString: String?): List<BridgeData> =
         rawString?.let { jacksonObjectMapper.readValue(stripEnclosingStrings(it)) } ?: emptyList()
 
     protected fun updateBridgeCacheData(
