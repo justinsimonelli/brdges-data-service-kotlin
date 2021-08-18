@@ -4,8 +4,8 @@ build_artifacts() {
     echo "#### Starting Build ####"
     mvn clean package
     rm -f deploy.zip
-    cp target/brdges-data-service-*.jar brdges-data-service-kotlin.jar .elasticbeanstalk .ebextensions
-    zip deploy.zip -r Procfile brdges-data-service-kotlin.jar
+    cp target/brdges-data-service-*.jar brdges-data-service-kotlin.jar
+    zip deploy.zip -r Procfile brdges-data-service-kotlin.jar .elasticbeanstalk .ebextensions
     rm -rf brdges-data-service-kotlin.jar
 }
 
