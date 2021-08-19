@@ -1,7 +1,6 @@
 package com.justinsimonelli.brdges.data.service.proxy.gov
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import com.justinsimonelli.brdges.data.service.models.gov.BridgeData
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
@@ -29,7 +28,7 @@ constructor(
             updateBridgeCacheData(bridgeCache, it)
 
             it.closedToTrafficAt = bridgeCache[it.cleanName()]?.closedToTrafficAt
-            it.lastClosedToTrafficAt = bridgeCache[it.cleanName()]?.lastClosedToTrafficAt
+            it.reopenedToTrafficAt = bridgeCache[it.cleanName()]?.reopenedToTrafficAt
         }
 
         return bridgeData

@@ -19,7 +19,7 @@ class SDOTResponseMapper {
             name = bridgeData.name,
             status = if (bridgeData.isOpenToTraffic()) DOWN else UP,
             closedToTrafficAt = bridgeData.closedToTrafficAt,
-            lastClosedToTrafficAt = bridgeData.lastClosedToTrafficAt,
+            reopenedToTrafficAt = bridgeData.reopenedToTrafficAt,
             lat = bridgeData.lat,
             lng = bridgeData.lng
         )

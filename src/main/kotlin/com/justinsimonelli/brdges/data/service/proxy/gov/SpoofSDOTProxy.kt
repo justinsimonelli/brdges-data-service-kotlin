@@ -23,7 +23,7 @@ constructor(
             updateBridgeCacheData(bridgeCache, it)
 
             it.closedToTrafficAt = bridgeCache[it.cleanName()]?.closedToTrafficAt
-            it.lastClosedToTrafficAt = bridgeCache[it.cleanName()]?.lastClosedToTrafficAt
+            it.reopenedToTrafficAt = bridgeCache[it.cleanName()]?.reopenedToTrafficAt
         }
 
         return bridgeData

@@ -1,5 +1,6 @@
 package com.justinsimonelli.brdges.data.service.cache
 
+import com.justinsimonelli.brdges.data.service.Constants.ZONE_PST
 import com.justinsimonelli.brdges.data.service.mapper.SDOTResponseMapper
 import com.justinsimonelli.brdges.data.service.models.BridgeStatusResponse
 import com.justinsimonelli.brdges.data.service.proxy.gov.SDOTProxy
@@ -8,6 +9,7 @@ import kotlinx.coroutines.runBlocking
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
+import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.locks.ReentrantLock
@@ -52,7 +54,7 @@ class CacheManager(
                     spoofSDOTProxy.pullBridgeData(spoofName = spoofName)
                 }
                 BridgeStatusResponse(
-                    lastUpdated = dateFormatter.format(ZonedDateTime.now()),
+                    lastUpdated = dateFormatter.format(ZonedDateTime.now(ZoneId.of(ZONE_PST, ZoneId.SHORT_IDS))),
                     statuses = sdotResponseMapper.map(bridgeData)
                 )
             }

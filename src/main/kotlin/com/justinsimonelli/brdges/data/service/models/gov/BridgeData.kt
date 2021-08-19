@@ -15,7 +15,7 @@ data class BridgeData(
     @JsonAlias("Longitude") val lng: Double,
     @JsonAlias("Status") val status: String,
     var closedToTrafficAt: String? = null,
-    var lastClosedToTrafficAt: String? = null,
+    var reopenedToTrafficAt: String? = null,
 ) {
     fun cleanName() = this.name.replace(WHITESPACE_PATTERN, WHITESPACE_REPLACEMENT).toLowerCase()
     fun isOpenToTraffic() = CLOSED.equals(this.status, ignoreCase = true)
