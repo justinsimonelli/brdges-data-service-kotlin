@@ -12,3 +12,6 @@ cache:
   bridges:
     refresh:
       intervalMillis: 60000
+
+app:
+  version: ssl-1.1
