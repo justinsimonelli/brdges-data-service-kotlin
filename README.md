@@ -5,8 +5,10 @@ This service provides the bridge data for the iOS app Brdges. It will periodical
 
 # Build
 `mvn clean install`
-OR
-`sh build_artifact.sh`
+OR  
+`sh build_artifact.sh -l 'ssl-1.4' -d 'ssl-1.4'`  
+- `-l` version label
+- `-d` description
 
 # Spoofing
 Responses can be forced/spoofed by adding the following query parameters:  
