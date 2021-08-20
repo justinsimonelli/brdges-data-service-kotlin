@@ -14,3 +14,7 @@ Responses can be forced/spoofed by adding the following query parameters:
 Available spoofs:  
 - `bridges_up`
 - `bridges_down`
+
+# Notes
+## EXTREMELY IMPORTANT ##
+Make sure it's a SINGLE INSTANCE type for the app!!!

@@ -1,7 +1,17 @@
 #!/usr/bin/env bash
 
+while getopts l:d: flag
+do
+    case "${flag}" in
+        l) label=${OPTARG};;
+        d) description=${OPTARG};;
+    esac
+done
+
+
 build_artifacts() {
     echo "#### Starting Build ####"
+    echo "#### Label = $label, Description = $description ####"
     mvn clean package
     package_files
     echo "Do you want to deploy to EB?"
@@ -23,7 +33,8 @@ package_files() {
 
 deploy_to_aws() {
   echo "#### Starting Deploy to AWS - brdges-data-service ####"
-  eb deploy brdges-data-service
+  echo "#### Label = $label, Description = $description ####"
+  eb deploy brdges-data-service --label $label --message $description
   rm -rf deploy.zip
 }
 
@@ -32,9 +43,10 @@ echo_commit_message() {
 }
 
 echo "Build the application?"
-select yn in "Yes" "No"; do
+select yn in "Yes" "No" "Exit"; do
     case $yn in
         Yes ) build_artifacts; exit;;
         No ) package_files; exit;;
+        Exit ) echo "BYE"; exit;;
     esac
 done
