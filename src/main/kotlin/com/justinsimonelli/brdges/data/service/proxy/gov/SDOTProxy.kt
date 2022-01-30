@@ -1,11 +1,14 @@
 package com.justinsimonelli.brdges.data.service.proxy.gov
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.justinsimonelli.brdges.data.service.cache.CacheFactory
+import com.justinsimonelli.brdges.data.service.cache.CacheKey
+import com.justinsimonelli.brdges.data.service.extensions.deserializeDataToList
+import com.justinsimonelli.brdges.data.service.extensions.update
 import com.justinsimonelli.brdges.data.service.models.gov.BridgeData
+import com.justinsimonelli.brdges.data.service.proxy.DataFetcher
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import org.springframework.beans.factory.annotation.Value
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -14,23 +17,22 @@ class SDOTProxy
 @Inject
 constructor(
     private val httpClient: HttpClient,
-    jacksonObjectMapper: ObjectMapper,
-    dateFormatter: DateTimeFormatter,
+    cacheFactory: CacheFactory,
     @Value("\${sdot.url}") private val sdotUrl: String
-): BaseProxy(jacksonObjectMapper, dateFormatter) {
+): DataFetcher<List<BridgeData>> {
 
-    private val bridgeCache = mutableMapOf<String, CacheEntry>()
+    private val statusCache = cacheFactory.forKey<String, CacheEntry>(CacheKey.SDOT)
 
-    suspend fun pullBridgeData(): List<BridgeData> {
-        val bridgeData = deserializeDataToList(httpClient.get<String>(sdotUrl))
+    override suspend fun fetch(spoofName: String?): List<BridgeData> {
+        val availableBridgeData = httpClient.get<String>(sdotUrl).deserializeDataToList()
 
-        bridgeData.forEach {
-            updateBridgeCacheData(bridgeCache, it)
-
-            it.closedToTrafficAt = bridgeCache[it.cleanName()]?.closedToTrafficAt
-            it.reopenedToTrafficAt = bridgeCache[it.cleanName()]?.reopenedToTrafficAt
+        availableBridgeData.forEach { availableBridge ->
+            statusCache.update(availableBridge).also { latestStatus ->
+                availableBridge.closedToTrafficAt = latestStatus.closedToTrafficAt
+                availableBridge.reopenedToTrafficAt = latestStatus.reopenedToTrafficAt
+            }
         }
 
-        return bridgeData
+        return availableBridgeData
     }
 }

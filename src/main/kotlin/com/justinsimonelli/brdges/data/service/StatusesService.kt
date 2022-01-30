@@ -1,4 +1,4 @@
-package com.justinsimonelli.brdges.data.service.cache
+package com.justinsimonelli.brdges.data.service
 
 import com.justinsimonelli.brdges.data.service.Constants.ZONE_PST
 import com.justinsimonelli.brdges.data.service.mapper.SDOTResponseMapper
@@ -17,13 +17,12 @@ import kotlin.concurrent.withLock
 
 @Component
 @EnableScheduling
-class CacheManager(
+class StatusesService(
     private val sdotProxy: SDOTProxy,
     private val spoofSDOTProxy: SpoofSDOTProxy,
     private val sdotResponseMapper: SDOTResponseMapper,
     private val dateFormatter: DateTimeFormatter
 ) {
-
     private lateinit var bridgeStatusesCache: BridgeStatusResponse
 
     private val lock = ReentrantLock()
@@ -32,8 +31,10 @@ class CacheManager(
         refreshBridgeStatusesCache()
     }
 
-    fun bridgeStatuses(force: Boolean?, spoofName: String?): BridgeStatusResponse {
-        return if (force == true) {
+    fun latest(force: Boolean?, spoofName: String?): BridgeStatusResponse {
+        return if (force == true || !spoofName.isNullOrEmpty()) {
+            bridgeStatusesCache.statuses.clear()
+            bridgeStatusesCache.lastUpdated = null
             pullLatestBridgeStatuses(spoofName = spoofName)
         } else {
             bridgeStatusesCache
@@ -49,10 +50,11 @@ class CacheManager(
         return lock.withLock {
             runBlocking {
                 val bridgeData = if (spoofName.isNullOrEmpty()) {
-                    sdotProxy.pullBridgeData()
+                    sdotProxy.fetch()
                 } else {
-                    spoofSDOTProxy.pullBridgeData(spoofName = spoofName)
+                    spoofSDOTProxy.fetch(spoofName)
                 }
+
                 BridgeStatusResponse(
                     lastUpdated = dateFormatter.format(ZonedDateTime.now(ZoneId.of(ZONE_PST, ZoneId.SHORT_IDS))),
                     statuses = sdotResponseMapper.map(bridgeData)

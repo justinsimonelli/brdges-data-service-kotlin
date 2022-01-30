@@ -3,9 +3,9 @@ package com.justinsimonelli.brdges.data.service.models.gov
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 
-private const val WHITESPACE_REPLACEMENT = "_"
+private const val WHITESPACE_REPLACEMENT_UNDERSCORE = "_"
 private val WHITESPACE_PATTERN = "\\s+".toRegex()
-private const val CLOSED = "closed"
+private const val STATUS_CLOSED = "closed"
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 data class BridgeData(
@@ -17,6 +17,6 @@ data class BridgeData(
     var closedToTrafficAt: String? = null,
     var reopenedToTrafficAt: String? = null,
 ) {
-    fun cleanName() = this.name.replace(WHITESPACE_PATTERN, WHITESPACE_REPLACEMENT).toLowerCase()
-    fun isOpenToTraffic() = CLOSED.equals(this.status, ignoreCase = true)
+    fun cleanName() = name.replace(WHITESPACE_PATTERN, WHITESPACE_REPLACEMENT_UNDERSCORE).toLowerCase()
+    fun isOpenToTraffic() = STATUS_CLOSED.equals(status, ignoreCase = true)
 }

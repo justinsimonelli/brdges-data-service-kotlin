@@ -1,8 +1,11 @@
 package com.justinsimonelli.brdges.data.service.proxy.gov
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.justinsimonelli.brdges.data.service.cache.CacheFactory
+import com.justinsimonelli.brdges.data.service.cache.CacheKey
+import com.justinsimonelli.brdges.data.service.extensions.deserializeDataToList
+import com.justinsimonelli.brdges.data.service.extensions.update
 import com.justinsimonelli.brdges.data.service.models.gov.BridgeData
-import java.time.format.DateTimeFormatter
+import com.justinsimonelli.brdges.data.service.proxy.DataFetcher
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -10,26 +13,27 @@ import javax.inject.Named
 class SpoofSDOTProxy
 @Inject
 constructor(
-    jacksonObjectMapper: ObjectMapper,
-    dateFormatter: DateTimeFormatter
-) : BaseProxy(jacksonObjectMapper, dateFormatter) {
+    cacheFactory: CacheFactory
+) : DataFetcher<List<BridgeData>> {
 
-    private val bridgeCache = mutableMapOf<String, CacheEntry>()
+    private val statusCache = cacheFactory.forKey<String, CacheEntry>(CacheKey.SPOOF)
 
-    fun pullBridgeData(spoofName: String?): List<BridgeData> {
-        val bridgeData = deserializeDataToList(spoofResponse(spoofName = spoofName))
+    override suspend fun fetch(spoofName: String?): List<BridgeData> {
+        val availableBridgeData = availableBridgesSpoofResponse(spoofName)
 
-        bridgeData.forEach {
-            updateBridgeCacheData(bridgeCache, it)
-
-            it.closedToTrafficAt = bridgeCache[it.cleanName()]?.closedToTrafficAt
-            it.reopenedToTrafficAt = bridgeCache[it.cleanName()]?.reopenedToTrafficAt
+        availableBridgeData?.forEach { availableBridge ->
+            statusCache.update(availableBridge).also { latestStatus ->
+                availableBridge.closedToTrafficAt = latestStatus.closedToTrafficAt
+                availableBridge.reopenedToTrafficAt = latestStatus.reopenedToTrafficAt
+            }
         }
 
-        return bridgeData
+        return availableBridgeData ?: emptyList()
     }
 
-    private fun spoofResponse(spoofName: String?): String = spoofName.let {
-        SDOTProxy::class.java.getResource("/spoof/${it}.txt").readText()
+    private fun availableBridgesSpoofResponse(spoofName: String?): List<BridgeData>? = spoofName.let {
+        SDOTProxy::class.java.getResource("/spoof/${it}.txt")?.let { spoofFile ->
+            spoofFile.readText().deserializeDataToList()
+        }
     }
 }

@@ -10,10 +10,12 @@ private const val DOWN = "down"
 @Component
 class SDOTResponseMapper {
 
-    fun map(bridgeData: List<BridgeData>): Map<String, BridgeStatus> =
-        bridgeData.associate { it.cleanName() to buildBridgeStatus(it) }
+    fun map(latestBridgeData: List<BridgeData>): MutableMap<String, BridgeStatus> =
+        latestBridgeData.associateTo(mutableMapOf()) {
+            it.cleanName() to mapBridgeStatus(it)
+        }
 
-    private fun buildBridgeStatus(bridgeData: BridgeData): BridgeStatus {
+    private fun mapBridgeStatus(bridgeData: BridgeData): BridgeStatus {
         return BridgeStatus(
             id = bridgeData.id.toString(),
             name = bridgeData.name,

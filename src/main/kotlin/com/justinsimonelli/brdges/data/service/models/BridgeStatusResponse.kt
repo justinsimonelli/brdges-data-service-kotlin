@@ -1,6 +1,6 @@
 package com.justinsimonelli.brdges.data.service.models
 
-class BridgeStatusResponse(
-    val statuses: Map<String, BridgeStatus>,
-    val lastUpdated: String?
+data class BridgeStatusResponse(
+    val statuses: MutableMap<String, BridgeStatus>,
+    var lastUpdated: String?
 )
