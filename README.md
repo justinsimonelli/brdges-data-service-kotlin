@@ -17,6 +17,10 @@ Available spoofs:
 - `bridges_up`
 - `bridges_down`
 
+# Certs
+Renew certs with the following command
+- `certbot --nginx -d brdges.notfoundexception.xyz`
+
 # Notes
 ## EXTREMELY IMPORTANT ##
 Make sure it's a SINGLE INSTANCE type for the app!!!
